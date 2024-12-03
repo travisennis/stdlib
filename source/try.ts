@@ -44,6 +44,12 @@ export class Try<T> {
 		}
 		return Option.some<T>(this.value as T);
 	}
+  ok() {
+    if (this.isFailure()) {
+      return Option.none<T>();
+    }
+    return Option.some<T>(this.value as T);
+  }
 
 	map<U>(f: (value: T) => U): Try<U> {
 		if (this.isFailure()) {
