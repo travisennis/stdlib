@@ -1,6 +1,6 @@
 {
   "name": "@travisennis/stdlib",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "A standard library built for me.",
   "type": "module",
   "exports": {

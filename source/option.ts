@@ -1,3 +1,7 @@
+import { Either } from "./either.ts";
+import { Result } from "./result.ts";
+import { Try } from "./try.ts";
+
 export abstract class Option<T> {
   abstract readonly isSome: boolean;
   abstract readonly isNone: boolean;
@@ -10,13 +14,22 @@ export abstract class Option<T> {
     return None.instance;
   }
 
+  static from<T>(value: T | null | undefined): Option<T> {
+    return value != null ? Option.some(value) : Option.none();
+  }
+
   abstract map<U>(fn: (value: T) => U): Option<U>;
   abstract flatMap<U>(fn: (value: T) => Option<U>): Option<U>;
   abstract filter(predicate: (value: T) => boolean): Option<T>;
-  abstract or(alternative: Option<T>): Option<T>;
-  abstract unwrapOr(defaultValue: T): T;
-  abstract unwrap(): T;
   abstract match<U>(pattern: { some: (value: T) => U; none: () => U }): U;
+  abstract unwrap(): T;
+  abstract unwrapOr(defaultValue: T): T;
+  abstract unwrapOrElse(fn: () => T): T;
+
+  // Conversion methods
+  abstract toResult<E>(error: E): Result<T, E>;
+  abstract toTry(error?: Error): Try<T>;
+  abstract toEither<L>(left: L): Either<L, T>;
 }
 
 export class Some<T> extends Option<T> {
@@ -39,20 +52,40 @@ export class Some<T> extends Option<T> {
     return predicate(this.value) ? this : Option.none();
   }
 
-  or(_alternative: Option<T>): Option<T> {
-    return this;
-  }
-
-  unwrapOr(_defaultValue: T): T {
-    return this.value;
+  match<U>(pattern: { some: (value: T) => U; none: () => U }): U {
+    return pattern.some(this.value);
   }
 
   unwrap(): T {
     return this.value;
   }
 
-  match<U>(pattern: { some: (value: T) => U; none: () => U }): U {
-    return pattern.some(this.value);
+  unwrapOr(_defaultValue: T): T {
+    return this.value;
+  }
+
+  unwrapOrElse(_fn: () => T): T {
+    return this.value;
+  }
+
+  toResult<E>(_error: E): Result<T, E> {
+    return Result.ok(this.value);
+  }
+
+  toTry(_error?: Error): Try<T> {
+    return Try.success(this.value);
+  }
+
+  toEither<L>(_left: L): Either<L, T> {
+    return Either.right(this.value);
+  }
+
+  toJSON(): { type: "Some"; value: T } {
+    return { type: "Some", value: this.value };
+  }
+
+  toString(): string {
+    return `Some(${String(this.value)})`;
   }
 }
 
@@ -64,7 +97,7 @@ export class None<T> extends Option<T> {
     super();
   }
 
-  static instance = new None<never>();
+  static readonly instance = new None<never>();
 
   map<U>(_fn: (value: T) => U): Option<U> {
     return Option.none();
@@ -78,24 +111,44 @@ export class None<T> extends Option<T> {
     return Option.none();
   }
 
-  or(alternative: Option<T>): Option<T> {
-    return alternative;
+  match<U>(pattern: { some: (value: T) => U; none: () => U }): U {
+    return pattern.none();
+  }
+
+  unwrap(): never {
+    throw new Error("Cannot unwrap None value");
   }
 
   unwrapOr(defaultValue: T): T {
     return defaultValue;
   }
 
-  unwrap(): never {
-    throw new Error("Called unwrap on a None value");
+  unwrapOrElse(fn: () => T): T {
+    return fn();
   }
 
-  match<U>(pattern: { some: (value: T) => U; none: () => U }): U {
-    return pattern.none();
+  toResult<E>(error: E): Result<T, E> {
+    return Result.err(error);
+  }
+
+  toTry(error: Error = new Error("None value")): Try<T> {
+    return Try.failure(error);
+  }
+
+  toEither<L>(left: L): Either<L, T> {
+    return Either.left(left);
+  }
+
+  toJSON(): { type: "None"; value?: T } {
+    return { type: "None" };
+  }
+
+  toString(): string {
+    return "None()";
   }
 }
 
-// Type guards for checking the type
+// Type guards
 export function isSome<T>(option: Option<T>): option is Some<T> {
   return option.isSome;
 }

@@ -1,89 +1,144 @@
 import { Option } from "./option.ts";
 
-export class Try<T> {
-  private constructor(private value: T | Error) {}
+export abstract class Try<T> {
+  abstract readonly isSuccess: boolean;
+  abstract readonly isFailure: boolean;
 
   static success<T>(value: T): Try<T> {
-    return new Try(value);
+    return new Success(value);
   }
 
   static failure<T>(error: Error): Try<T> {
-    return new Try<T>(error);
+    return new Failure(error);
   }
 
-  unsafeGet(): T {
-    if (this.isFailure()) {
-      throw new Error("Cannot get value from a failed Try");
-    }
-    return this.value as T;
+  abstract map<U>(fn: (value: T) => U): Try<U>;
+  abstract flatMap<U>(fn: (value: T) => Try<U>): Try<U>;
+  abstract recover(fn: (error: Error) => T): Try<T>;
+  abstract match<U>(pattern: {
+    success: (value: T) => U;
+    failure: (error: Error) => U;
+  }): U;
+  abstract unwrap(): T;
+  abstract unwrapOr(defaultValue: T): T;
+  abstract ok(): Option<T>;
+}
+
+export class Success<T> extends Try<T> {
+  readonly isSuccess: boolean = true;
+  readonly isFailure: boolean = false;
+
+  constructor(readonly value: T) {
+    super();
   }
 
-  isSuccess(): boolean {
-    return !(this.value instanceof Error);
-  }
-
-  isFailure(): boolean {
-    return this.value instanceof Error;
-  }
-
-  getOrElse(defaultValue: T): T {
-    return this.isSuccess() ? (this.value as T) : defaultValue;
-  }
-
-  getOrThrow(): T {
-    if (this.isFailure()) {
-      throw this.value;
-    }
-    return this.value as T;
-  }
-
-  ok() {
-    if (this.isFailure()) {
-      return Option.none<T>();
-    }
-    return Option.some<T>(this.value as T);
-  }
-
-  failSilently(callback: (e: Error) => void) {
-    if (this.isFailure()) {
-      callback(this.value as Error);
-      return Option.none<T>();
-    }
-    return Option.some<T>(this.value as T);
-  }
-
-  map<U>(f: (value: T) => U): Try<U> {
-    if (this.isFailure()) {
-      return Try.failure(this.value as Error);
-    }
+  map<U>(fn: (value: T) => U): Try<U> {
     try {
-      return Try.success(f(this.value as T));
+      return Try.success(fn(this.value));
     } catch (e) {
       return Try.failure(e instanceof Error ? e : new Error(String(e)));
     }
   }
 
-  flatMap<U>(f: (value: T) => Try<U>): Try<U> {
-    if (this.isFailure()) {
-      return Try.failure(this.value as Error);
-    }
+  flatMap<U>(fn: (value: T) => Try<U>): Try<U> {
     try {
-      return f(this.value as T);
+      return fn(this.value);
     } catch (e) {
       return Try.failure(e instanceof Error ? e : new Error(String(e)));
     }
   }
 
-  recover(f: (error: Error) => T): Try<T> {
-    if (this.isSuccess()) {
-      return this;
-    }
+  recover(_fn: (error: Error) => T): Try<T> {
+    return this;
+  }
+
+  match<U>(pattern: {
+    success: (value: T) => U;
+    failure: (error: Error) => U;
+  }): U {
+    return pattern.success(this.value);
+  }
+
+  unwrap(): T {
+    return this.value;
+  }
+
+  unwrapOr(_defaultValue: T): T {
+    return this.value;
+  }
+
+  ok(): Option<T> {
+    return Option.some(this.value);
+  }
+
+  toJSON(): { type: "Try.success"; value: T } {
+    return { type: "Try.success", value: this.value };
+  }
+
+  toString(): string {
+    return `Try.success(${String(this.value)})`;
+  }
+}
+
+export class Failure<T> extends Try<T> {
+  readonly isSuccess: boolean = false;
+  readonly isFailure: boolean = true;
+
+  constructor(readonly error: Error) {
+    super();
+  }
+
+  map<U>(_fn: (value: T) => U): Try<U> {
+    return Try.failure(this.error);
+  }
+
+  flatMap<U>(_fn: (value: T) => Try<U>): Try<U> {
+    return Try.failure(this.error);
+  }
+
+  recover(fn: (error: Error) => T): Try<T> {
     try {
-      return Try.success(f(this.value as Error));
+      return Try.success(fn(this.error));
     } catch (e) {
       return Try.failure(e instanceof Error ? e : new Error(String(e)));
     }
   }
+
+  match<U>(pattern: {
+    success: (value: T) => U;
+    failure: (error: Error) => U;
+  }): U {
+    return pattern.failure(this.error);
+  }
+
+  unwrap(): never {
+    throw this.error;
+  }
+
+  unwrapOr(defaultValue: T): T {
+    return defaultValue;
+  }
+
+  ok(): Option<T> {
+    return Option.none();
+  }
+
+  toJSON(): { type: "Try.failure"; value: Error } {
+    return { type: "Try.failure", value: this.error };
+  }
+
+  toString(): string {
+    return `Try.failure(${String(this.error)})`;
+  }
+}
+
+// Type guards
+export function isSuccess<T>(tryValue: Try<T>): tryValue is Success<T> {
+  return tryValue.isSuccess;
+}
+
+export function isFailure<T>(tryValue: Try<T>): tryValue is Failure<T> {
+  return tryValue.isFailure;
 }
 
 export function syncTry<T>(f: () => T): Try<T> {

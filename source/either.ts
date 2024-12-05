@@ -1,82 +1,115 @@
-// Define the Either type
-export type Either<L, R> = Left<L> | Right<R>;
+export abstract class Either<L, R> {
+  abstract readonly isLeft: boolean;
+  abstract readonly isRight: boolean;
 
-// Left class represents the left value
-export class Left<L> {
-  readonly value: L;
-  readonly _tag = "Left";
-
-  constructor(value: L) {
-    this.value = value;
+  static left<L, R = never>(value: L): Either<L, R> {
+    return new Left(value);
   }
 
-  isLeft(): this is Left<L> {
-    return true;
+  static right<L, R>(value: R): Either<L, R> {
+    return new Right(value);
   }
 
-  isRight(): this is Right<never> {
-    return false;
+  abstract map<T>(fn: (r: R) => T): Either<L, T>;
+  abstract mapLeft<T>(fn: (l: L) => T): Either<T, R>;
+  abstract match<T>(pattern: {
+    left: (value: L) => T;
+    right: (value: R) => T;
+  }): T;
+  abstract unwrap(): R;
+  abstract unwrapLeft(): L;
+  abstract unwrapOr(defaultValue: R): R;
+}
+
+export class Left<L, R> extends Either<L, R> {
+  readonly isLeft: boolean = true;
+  readonly isRight: boolean = false;
+
+  constructor(readonly value: L) {
+    super();
   }
 
-  // Functional methods
-  map<T>(_fn: (r: never) => T): Either<L, T> {
-    return this as Left<L>;
+  map<T>(_fn: (r: R) => T): Either<L, T> {
+    return Either.left(this.value);
   }
 
-  mapLeft<T>(fn: (l: L) => T): Either<T, never> {
-    return new Left(fn(this.value));
+  mapLeft<T>(fn: (l: L) => T): Either<T, R> {
+    return Either.left(fn(this.value));
   }
 
-  fold<T>(leftFn: (l: L) => T, _rightFn: (r: never) => T): T {
-    return leftFn(this.value);
+  match<T>(pattern: { left: (value: L) => T; right: (value: R) => T }): T {
+    return pattern.left(this.value);
+  }
+
+  unwrap(): never {
+    throw new Error("Cannot unwrap Right value from Left");
   }
 
   unwrapLeft(): L {
     return this.value;
   }
 
-  unwrapRight(): never {
-    throw new Error("Cannot unwrap Right value from Left");
+  unwrapOr(defaultValue: R): R {
+    return defaultValue;
+  }
+
+  toJSON(): { type: "Left"; value: L } {
+    return { type: "Left", value: this.value };
+  }
+
+  toString(): string {
+    return `Left(${String(this.value)})`;
   }
 }
 
-// Right class represents the right value
-export class Right<R> {
-  readonly value: R;
-  readonly _tag = "Right";
+export class Right<L, R> extends Either<L, R> {
+  readonly isLeft: boolean = false;
+  readonly isRight: boolean = true;
 
-  constructor(value: R) {
-    this.value = value;
+  constructor(readonly value: R) {
+    super();
   }
 
-  isLeft(): this is Left<never> {
-    return false;
+  map<T>(fn: (r: R) => T): Either<L, T> {
+    return Either.right(fn(this.value));
   }
 
-  isRight(): this is Right<R> {
-    return true;
+  mapLeft<T>(_fn: (l: L) => T): Either<T, R> {
+    return Either.right(this.value);
   }
 
-  // Functional methods
-  map<T>(fn: (r: R) => T): Either<never, T> {
-    return new Right(fn(this.value));
+  match<T>(pattern: { left: (value: L) => T; right: (value: R) => T }): T {
+    return pattern.right(this.value);
   }
 
-  mapLeft<T>(_fn: (l: never) => T): Either<T, R> {
-    return this as Right<R>;
-  }
-
-  fold<T>(_leftFn: (l: never) => T, rightFn: (r: R) => T): T {
-    return rightFn(this.value);
+  unwrap(): R {
+    return this.value;
   }
 
   unwrapLeft(): never {
     throw new Error("Cannot unwrap Left value from Right");
   }
 
-  unwrapRight(): R {
+  unwrapOr(_defaultValue: R): R {
     return this.value;
   }
+
+  toJSON(): { type: "Right"; value: R } {
+    return { type: "Right", value: this.value };
+  }
+
+  toString(): string {
+    return `Right(${String(this.value)})`;
+  }
+}
+
+// Type guards
+export function isLeft<L, R>(either: Either<L, R>): either is Left<L, R> {
+  return either.isLeft;
+}
+
+export function isRight<L, R>(either: Either<L, R>): either is Right<L, R> {
+  return either.isRight;
 }
 
 // Helper functions to create Either values
