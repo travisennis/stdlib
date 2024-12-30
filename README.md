@@ -150,3 +150,5 @@ MIT License - see the [LICENSE](LICENSE) file for details.
 ## Acknowledgements
 
 This library implements functional programming patterns inspired by Rust's standard library and functional programming concepts from languages like Haskell and Scala. The implementation focuses on providing these patterns in a TypeScript-friendly way while maintaining type safety and ease of use.
+
+The code in @travisennis/stdlib/desm was inspired by [https://github.com/mcollina/desm](https://github.com/mcollina/desm)
