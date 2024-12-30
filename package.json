@@ -4,8 +4,34 @@
   "description": "A standard library built for me.",
   "type": "module",
   "exports": {
-    "types": "./dist/index.d.ts",
-    "default": "./dist/index.js"
+    "./desm": {
+      "types": "./dist/desm.d.ts",
+      "default": "./dist/desm.js"
+    },
+    "./either": {
+      "types": "./dist/either.d.ts",
+      "default": "./dist/either.js"
+    },
+    "./object": {
+      "types": "./dist/object.d.ts",
+      "default": "./dist/object.js"
+    },
+    "./option": {
+      "types": "./dist/option.d.ts",
+      "default": "./dist/option.js"
+    },
+    "./result": {
+      "types": "./dist/result.d.ts",
+      "default": "./dist/result.js"
+    },
+    "./try": {
+      "types": "./dist/try.d.ts",
+      "default": "./dist/try.js"
+    },
+    "./utilities": {
+      "types": "./dist/utilities.d.ts",
+      "default": "./dist/utilities.js"
+    }
   },
   "keywords": ["cli", "ai", "llm"],
   "author": "Travis Ennis",
