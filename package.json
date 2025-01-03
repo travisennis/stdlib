@@ -39,6 +39,7 @@
     "build": "npm run compile",
     "clean": "rm -rf ./dist/",
     "compile": "rm -rf ./dist && tsc && cp -r ./dist/source/. ./dist && rm -rf ./dist/source",
+    "prepublish": "npm run build",
     "lint": "biome lint",
     "lint:fix": "biome lint --unsafe --write",
     "lint:staged": "biome lint --error-on-warnings --no-errors-on-unmatched --staged",
