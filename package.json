@@ -12,6 +12,10 @@
       "types": "./dist/either.d.ts",
       "default": "./dist/either.js"
     },
+    "./env": {
+      "types": "./dist/env-paths.d.ts",
+      "default": "./dist/-env-paths.js"
+    },
     "./object": {
       "types": "./dist/object.d.ts",
       "default": "./dist/object.js"
