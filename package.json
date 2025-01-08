@@ -14,7 +14,7 @@
     },
     "./env": {
       "types": "./dist/env-paths.d.ts",
-      "default": "./dist/-env-paths.js"
+      "default": "./dist/env-paths.js"
     },
     "./object": {
       "types": "./dist/object.d.ts",
