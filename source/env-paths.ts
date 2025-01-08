@@ -6,7 +6,50 @@ const homedir = os.homedir();
 const tmpdir = os.tmpdir();
 const { env } = process;
 
-const windows = (name: string) => {
+/**
+ * Standard paths for application directories following XDG Base Directory Specification
+ * @see https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
+ */
+interface EnvPaths {
+  /**
+   * Directory for data files (XDG_DATA_HOME)
+   * User-specific data files should be written here
+   */
+  data: string;
+
+  /**
+   * Directory for configuration files (XDG_CONFIG_HOME)
+   * User-specific configuration files should be written here
+   */
+  config: string;
+
+  /**
+   * Directory for non-essential data files (XDG_CACHE_HOME)
+   * User-specific non-essential (cached) data should be written here
+   */
+  cache: string;
+
+  /**
+   * Directory for log files (within XDG_STATE_HOME)
+   * User-specific log files should be written here
+   */
+  logs: string;
+
+  /**
+   * Directory for state files (XDG_STATE_HOME)
+   * User-specific state data should be written here
+   * This is similar to cache but preserved between application restarts
+   */
+  state: string;
+
+  /**
+   * Directory for temporary files
+   * User-specific temporary files should be written here
+   */
+  temp: string;
+}
+
+const windows = (name: string): EnvPaths => {
   const appData = env.APPDATA ?? path.join(homedir, "AppData", "Roaming");
   const localAppData =
     env.LOCALAPPDATA ?? path.join(homedir, "AppData", "Local");
@@ -23,7 +66,7 @@ const windows = (name: string) => {
 };
 
 // https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html
-const unix = (name: string) => {
+const unix = (name: string): EnvPaths => {
   const username = path.basename(homedir);
 
   return {
@@ -50,7 +93,7 @@ const unix = (name: string) => {
   };
 };
 
-export default function envPaths(name: string) {
+export default function envPaths(name: string): EnvPaths {
   if (process.platform === "win32") {
     return windows(name);
   }
