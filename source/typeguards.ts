@@ -24,7 +24,7 @@ export function isError(error: unknown): error is Error {
  * }
  */
 export function isString(value: unknown): value is string {
-  return typeof value === 'string';
+  return typeof value === "string";
 }
 
 /**
@@ -36,7 +36,7 @@ export function isString(value: unknown): value is string {
  * }
  */
 export function isNumber(value: unknown): value is number {
-  return typeof value === 'number' && !Number.isNaN(value);
+  return typeof value === "number" && !Number.isNaN(value);
 }
 
 /**
@@ -48,7 +48,7 @@ export function isNumber(value: unknown): value is number {
  * }
  */
 export function isBoolean(value: unknown): value is boolean {
-  return typeof value === 'boolean';
+  return typeof value === "boolean";
 }
 
 /**
@@ -72,7 +72,7 @@ export function isArray(value: unknown): value is unknown[] {
  * }
  */
 export function isObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null && !Array.isArray(value);
+  return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 /**
@@ -96,7 +96,7 @@ export function isNull(value: unknown): value is null {
  * }
  */
 export function isUndefined(value: unknown): value is undefined {
-  return typeof value === 'undefined';
+  return typeof value === "undefined";
 }
 
 /**
@@ -108,7 +108,7 @@ export function isUndefined(value: unknown): value is undefined {
  * }
  */
 export function isDefined<T>(value: T | undefined): value is T {
-  return typeof value !== 'undefined';
+  return typeof value !== "undefined";
 }
 
 /**
@@ -120,7 +120,7 @@ export function isDefined<T>(value: T | undefined): value is T {
  * }
  */
 export function isNullOrUndefined(value: unknown): value is null | undefined {
-  return value === null || typeof value === 'undefined';
+  return value === null || typeof value === "undefined";
 }
 
 /**
@@ -132,7 +132,7 @@ export function isNullOrUndefined(value: unknown): value is null | undefined {
  * }
  */
 export function isFunction(value: unknown): value is Function {
-  return typeof value === 'function';
+  return typeof value === "function";
 }
 
 /**
@@ -156,9 +156,10 @@ export function isDate(value: unknown): value is Date {
  * }
  */
 export function isPromise<T = unknown>(value: unknown): value is Promise<T> {
-  return value instanceof Promise || (
-    isObject(value) &&
-    isFunction((value as any).then) &&
-    isFunction((value as any).catch)
+  return (
+    value instanceof Promise ||
+    (isObject(value) &&
+      isFunction((value as any).then) &&
+      isFunction((value as any).catch))
   );
 }
