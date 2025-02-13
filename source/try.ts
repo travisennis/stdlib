@@ -27,9 +27,11 @@ export abstract class Try<T> {
 export class Success<T> extends Try<T> {
   readonly isSuccess: boolean = true;
   readonly isFailure: boolean = false;
+  readonly value: T;
 
-  constructor(readonly value: T) {
+  constructor(value: T) {
     super();
+    this.value = value;
   }
 
   map<U>(fn: (value: T) => U): Try<U> {
@@ -71,11 +73,12 @@ export class Success<T> extends Try<T> {
     return Option.some(this.value);
   }
 
+  // biome-ignore lint/style/useNamingConvention: <explanation>
   toJSON(): { type: "Try.success"; value: T } {
     return { type: "Try.success", value: this.value };
   }
 
-  toString(): string {
+  override toString(): string {
     return `Try.success(${String(this.value)})`;
   }
 }
@@ -83,9 +86,11 @@ export class Success<T> extends Try<T> {
 export class Failure<T> extends Try<T> {
   readonly isSuccess: boolean = false;
   readonly isFailure: boolean = true;
+  readonly error: Error;
 
-  constructor(readonly error: Error) {
+  constructor(error: Error) {
     super();
+    this.error = error;
   }
 
   map<U>(_fn: (value: T) => U): Try<U> {
@@ -123,11 +128,12 @@ export class Failure<T> extends Try<T> {
     return Option.none();
   }
 
+  // biome-ignore lint/style/useNamingConvention: <explanation>
   toJSON(): { type: "Try.failure"; value: Error } {
     return { type: "Try.failure", value: this.error };
   }
 
-  toString(): string {
+  override toString(): string {
     return `Try.failure(${String(this.error)})`;
   }
 }

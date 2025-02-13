@@ -35,9 +35,11 @@ export abstract class Option<T> {
 export class Some<T> extends Option<T> {
   readonly isSome: boolean = true;
   readonly isNone: boolean = false;
+  readonly value: T;
 
-  constructor(readonly value: T) {
+  constructor(value: T) {
     super();
+    this.value = value;
   }
 
   map<U>(fn: (value: T) => U): Option<U> {
@@ -80,11 +82,12 @@ export class Some<T> extends Option<T> {
     return Either.right(this.value);
   }
 
+  // biome-ignore lint/style/useNamingConvention: <explanation>
   toJSON(): { type: "Some"; value: T } {
     return { type: "Some", value: this.value };
   }
 
-  toString(): string {
+  override toString(): string {
     return `Some(${String(this.value)})`;
   }
 }
@@ -139,11 +142,12 @@ export class None<T> extends Option<T> {
     return Either.left(left);
   }
 
+  // biome-ignore lint/style/useNamingConvention: <explanation>
   toJSON(): { type: "None"; value?: T } {
     return { type: "None" };
   }
 
-  toString(): string {
+  override toString(): string {
     return "None()";
   }
 }

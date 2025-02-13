@@ -22,9 +22,11 @@ export abstract class Result<T, E> {
 export class Ok<T, E> extends Result<T, E> {
   readonly isOk: boolean = true;
   readonly isErr: boolean = false;
+  readonly value: T;
 
-  constructor(readonly value: T) {
+  constructor(value: T) {
     super();
+    this.value = value;
   }
 
   map<U>(fn: (value: T) => U): Result<U, E> {
@@ -51,11 +53,12 @@ export class Ok<T, E> extends Result<T, E> {
     return Option.some(this.value);
   }
 
+  // biome-ignore lint/style/useNamingConvention: <explanation>
   toJSON(): { type: "Ok"; value: T } {
     return { type: "Ok", value: this.value };
   }
 
-  toString(): string {
+  override toString(): string {
     return `Ok(${String(this.value)})`;
   }
 }
@@ -63,9 +66,11 @@ export class Ok<T, E> extends Result<T, E> {
 export class Err<T, E> extends Result<T, E> {
   readonly isOk: boolean = false;
   readonly isErr: boolean = true;
+  readonly error: E;
 
-  constructor(readonly error: E) {
+  constructor(error: E) {
     super();
+    this.error = error;
   }
 
   map<U>(_fn: (value: T) => U): Result<U, E> {
@@ -92,11 +97,12 @@ export class Err<T, E> extends Result<T, E> {
     return Option.none();
   }
 
+  // biome-ignore lint/style/useNamingConvention: <explanation>
   toJSON(): { type: "Err"; value: E } {
     return { type: "Err", value: this.error };
   }
 
-  toString(): string {
+  override toString(): string {
     return `Err(${String(this.error)})`;
   }
 }

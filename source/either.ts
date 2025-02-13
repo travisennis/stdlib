@@ -24,9 +24,11 @@ export abstract class Either<L, R> {
 export class Left<L, R> extends Either<L, R> {
   readonly isLeft: boolean = true;
   readonly isRight: boolean = false;
+  readonly value: L;
 
-  constructor(readonly value: L) {
+  constructor(value: L) {
     super();
+    this.value = value;
   }
 
   map<T>(_fn: (r: R) => T): Either<L, T> {
@@ -53,11 +55,12 @@ export class Left<L, R> extends Either<L, R> {
     return defaultValue;
   }
 
+  // biome-ignore lint/style/useNamingConvention: <explanation>
   toJSON(): { type: "Left"; value: L } {
     return { type: "Left", value: this.value };
   }
 
-  toString(): string {
+  override toString(): string {
     return `Left(${String(this.value)})`;
   }
 }
@@ -65,9 +68,11 @@ export class Left<L, R> extends Either<L, R> {
 export class Right<L, R> extends Either<L, R> {
   readonly isLeft: boolean = false;
   readonly isRight: boolean = true;
+  readonly value: R;
 
-  constructor(readonly value: R) {
+  constructor(value: R) {
     super();
+    this.value = value;
   }
 
   map<T>(fn: (r: R) => T): Either<L, T> {
@@ -94,11 +99,12 @@ export class Right<L, R> extends Either<L, R> {
     return this.value;
   }
 
+  // biome-ignore lint/style/useNamingConvention: <explanation>
   toJSON(): { type: "Right"; value: R } {
     return { type: "Right", value: this.value };
   }
 
-  toString(): string {
+  override toString(): string {
     return `Right(${String(this.value)})`;
   }
 }
