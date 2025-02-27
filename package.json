@@ -36,6 +36,10 @@
       "types": "./dist/try.d.ts",
       "default": "./dist/try.js"
     },
+    "./typeguards": {
+      "types": "./dist/typeguards.d.ts",
+      "default": "./dist/typeguards.js"
+    },
     "./utilities": {
       "types": "./dist/utilities.d.ts",
       "default": "./dist/utilities.js"
