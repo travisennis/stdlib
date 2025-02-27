@@ -93,7 +93,7 @@ const unix = (name: string): EnvPaths => {
   };
 };
 
-export default function envPaths(name: string): EnvPaths {
+export function envPaths(name: string): EnvPaths {
   if (process.platform === "win32") {
     return windows(name);
   }

@@ -9,7 +9,9 @@ export const utilities = {
     option<T>(arr: Option<T>[]): Option<T[]> {
       const results: T[] = [];
       for (const opt of arr) {
-        if (isNone(opt)) return Option.none();
+        if (isNone(opt)) {
+          return Option.none();
+        }
         results.push(opt.unwrap());
       }
       return Option.some(results);
@@ -18,7 +20,9 @@ export const utilities = {
     result<T, E>(arr: Result<T, E>[]): Result<T[], E> {
       const results: T[] = [];
       for (const res of arr) {
-        if (isErr(res)) return Result.err(res.error);
+        if (isErr(res)) {
+          return Result.err(res.error);
+        }
         results.push(res.unwrap());
       }
       return Result.ok(results);
@@ -27,7 +31,9 @@ export const utilities = {
     try<T>(arr: Try<T>[]): Try<T[]> {
       const results: T[] = [];
       for (const t of arr) {
-        if (isFailure(t)) return t as Try<T[]>;
+        if (isFailure(t)) {
+          return t as Try<T[]>;
+        }
         results.push(t.unwrap());
       }
       return Try.success(results);

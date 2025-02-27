@@ -131,6 +131,8 @@ export function isNullOrUndefined(value: unknown): value is null | undefined {
  *   value();
  * }
  */
+
+// biome-ignore lint/complexity/noBannedTypes: <explanation>
 export function isFunction(value: unknown): value is Function {
   return typeof value === "function";
 }
@@ -144,7 +146,7 @@ export function isFunction(value: unknown): value is Function {
  * }
  */
 export function isDate(value: unknown): value is Date {
-  return value instanceof Date && !isNaN(value.getTime());
+  return value instanceof Date && !Number.isNaN(value.getTime());
 }
 
 /**
@@ -158,8 +160,6 @@ export function isDate(value: unknown): value is Date {
 export function isPromise<T = unknown>(value: unknown): value is Promise<T> {
   return (
     value instanceof Promise ||
-    (isObject(value) &&
-      isFunction((value as any).then) &&
-      isFunction((value as any).catch))
+    (isObject(value) && isFunction(value.then) && isFunction(value.catch))
   );
 }

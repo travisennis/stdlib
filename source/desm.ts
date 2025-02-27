@@ -10,6 +10,4 @@ function urlJoin(url: string | URL, ...str: string[]) {
   return join(urlDirname(url), ...str);
 }
 
-export default urlDirname;
-
 export { fileURLToPath as filename, urlJoin as join, urlDirname as dirname };
