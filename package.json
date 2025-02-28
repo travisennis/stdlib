@@ -40,6 +40,10 @@
       "types": "./dist/typeguards.d.ts",
       "default": "./dist/typeguards.js"
     },
+    "./functional": {
+      "types": "./dist/functional.d.ts",
+      "default": "./dist/functional.js"
+    },
     "./utilities": {
       "types": "./dist/utilities.d.ts",
       "default": "./dist/utilities.js"
