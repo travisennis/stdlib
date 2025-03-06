@@ -3,6 +3,8 @@
  * These utilities help ensure type safety and provide better type inference.
  */
 
+import type { JsonValue } from "./types.ts";
+
 /**
  * Checks if a value is an Error instance
  * @param error - Value to check
@@ -25,6 +27,13 @@ export function isError(error: unknown): error is Error {
  */
 export function isString(value: unknown): value is string {
   return typeof value === "string";
+}
+
+/**
+ * Check if a value is a non-empty string
+ */
+export function isNonEmptyString(value: unknown): value is string {
+  return typeof value === "string" && value.trim().length > 0;
 }
 
 /**
@@ -59,8 +68,19 @@ export function isBoolean(value: unknown): value is boolean {
  *   value.forEach(item => console.log(item));
  * }
  */
-export function isArray(value: unknown): value is unknown[] {
-  return Array.isArray(value);
+export function isArray<T>(
+  value: unknown,
+  itemValidator?: (item: unknown) => item is T,
+): value is T[] {
+  if (!Array.isArray(value)) {
+    return false;
+  }
+
+  if (itemValidator) {
+    return value.every((item) => itemValidator(item));
+  }
+
+  return true;
 }
 
 /**
@@ -162,4 +182,31 @@ export function isPromise<T = unknown>(value: unknown): value is Promise<T> {
     value instanceof Promise ||
     (isObject(value) && isFunction(value.then) && isFunction(value.catch))
   );
+}
+
+/**
+ * Check if a string is a valid URL
+ */
+export function isUrl(value: string): boolean {
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Check if a string is valid JSON
+ */
+export function isValidJson(value: unknown): value is JsonValue {
+  if (!isString(value)) {
+    return false;
+  }
+  try {
+    JSON.parse(value);
+    return true;
+  } catch {
+    return false;
+  }
 }
