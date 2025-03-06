@@ -40,3 +40,8 @@ export type RequiredFields<T, K extends keyof T> = Omit<T, K> &
 export type DeepPartial<T> = T extends object
   ? { [P in keyof T]?: DeepPartial<T[P]> }
   : T;
+
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export type AsyncReturnType<T extends (...args: any) => Promise<any>> =
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  T extends (...args: any) => Promise<infer R> ? R : any;
