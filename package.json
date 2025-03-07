@@ -4,6 +4,10 @@
   "description": "A standard library built for me.",
   "type": "module",
   "exports": {
+    "./async": {
+      "types": "./dist/async.d.ts",
+      "default": "./dist/async.js"
+    },
     "./desm": {
       "types": "./dist/desm.d.ts",
       "default": "./dist/desm.js"
@@ -15,6 +19,10 @@
     "./env": {
       "types": "./dist/env-paths.d.ts",
       "default": "./dist/env-paths.js"
+    },
+    "./functional": {
+      "types": "./dist/functional.d.ts",
+      "default": "./dist/functional.js"
     },
     "./object": {
       "types": "./dist/object.d.ts",
@@ -40,9 +48,9 @@
       "types": "./dist/typeguards.d.ts",
       "default": "./dist/typeguards.js"
     },
-    "./functional": {
-      "types": "./dist/functional.d.ts",
-      "default": "./dist/functional.js"
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "default": "./dist/types.js"
     },
     "./utilities": {
       "types": "./dist/utilities.d.ts",
