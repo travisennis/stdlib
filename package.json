@@ -4,6 +4,10 @@
   "description": "A standard library built for me.",
   "type": "module",
   "exports": {
+    "./array": {
+      "types": "./dist/array.d.ts",
+      "default": "./dist/array.js"
+    },
     "./async": {
       "types": "./dist/async.d.ts",
       "default": "./dist/async.js"
