@@ -48,6 +48,20 @@ export function isNumber(value: unknown): value is number {
   return typeof value === "number" && !Number.isNaN(value);
 }
 
+type PositiveInteger = number & { __brand: "PositiveInteger" };
+
+/**
+ * Checks if a value is a positive integer
+ * @param number - Value to check
+ * @example
+ * if (isPositiveInteger(value)) {
+ *   console.log(`${value} is a positive integer`);
+ * }
+ */
+export function isPositiveInteger(number: unknown): number is PositiveInteger {
+  return Number.isInteger(number) && (number as number) > 0;
+}
+
 /**
  * Checks if a value is a boolean
  * @param value - Value to check
