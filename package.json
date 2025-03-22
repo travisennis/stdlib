@@ -24,6 +24,10 @@
       "types": "./dist/env-paths.d.ts",
       "default": "./dist/env-paths.js"
     },
+    "./errors": {
+      "types": "./dist/errors.d.ts",
+      "default": "./dist/errors.js"
+    },
     "./functional": {
       "types": "./dist/functional.d.ts",
       "default": "./dist/functional.js"
@@ -82,7 +86,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@types/node": "^22.13.9",
+    "@types/node": "^22.13.11",
     "typescript": "^5.8.2"
   },
   "publishConfig": {
