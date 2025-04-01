@@ -32,6 +32,10 @@
       "types": "./dist/functional.d.ts",
       "default": "./dist/functional.js"
     },
+    "./array-includes": {
+      "types": "./dist/array-includes.d.ts",
+      "default": "./dist/array-includes.js"
+    },
     "./object": {
       "types": "./dist/object.d.ts",
       "default": "./dist/object.js"
