@@ -224,3 +224,17 @@ export function isValidJson(value: unknown): value is JsonValue {
     return false;
   }
 }
+
+/**
+ * Checks if a value is a non-null object (excluding arrays)
+ * @param value - Value to check
+ * @returns True if the value is a non-null object (excluding arrays)
+ * @example
+ * if (isRecord(value)) {
+ *   const keys = Object.keys(value);
+ *   console.log(`Object has ${keys.length} properties`);
+ * }
+ */
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
