@@ -81,3 +81,10 @@ export type Equal<X, Y> = (<T>() => T extends X ? 1 : 2) extends <
  * CANNOT be passed to a function which expects 'a'.
  */
 export type Extends<X, Y> = Y extends X ? true : false;
+
+/**
+ * Makes all properties in T mutable (removes readonly modifiers).
+ */
+export type Mutable<T> = {
+  -readonly [K in keyof T]: T[K];
+};
