@@ -88,3 +88,17 @@ export type Extends<X, Y> = Y extends X ? true : false;
 export type Mutable<T> = {
   -readonly [K in keyof T]: T[K];
 };
+
+/**
+* Flattens and simplifies a type, making it easier to read in editor tooltips.
+*
+* Useful for displaying the "final" shape of a complex type after intersections,
+* mapped types, or conditional types have been applied.
+*
+* @example
+*   type Foo = { a: string } & { b: number };
+*   type PrettyFoo = Prettify<Foo>; // { a: string; b: number }
+*/
+export type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {};
