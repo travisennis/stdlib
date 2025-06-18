@@ -166,7 +166,7 @@ export function isNullOrUndefined(value: unknown): value is null | undefined {
  * }
  */
 
-// biome-ignore lint/complexity/noBannedTypes: <explanation>
+// biome-ignore lint/complexity/noBannedTypes: necessary for typeguard
 export function isFunction(value: unknown): value is Function {
   return typeof value === "function";
 }

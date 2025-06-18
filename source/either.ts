@@ -55,7 +55,7 @@ export class Left<L, R> extends Either<L, R> {
     return defaultValue;
   }
 
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: third-party controlled
   toJSON(): { type: "Left"; value: L } {
     return { type: "Left", value: this.value };
   }
@@ -99,7 +99,7 @@ export class Right<L, R> extends Either<L, R> {
     return this.value;
   }
 
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: third-party controlled
   toJSON(): { type: "Right"; value: R } {
     return { type: "Right", value: this.value };
   }

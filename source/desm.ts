@@ -1,6 +1,6 @@
-import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import type { URL } from "node:url";
+import { fileURLToPath } from "node:url";
 
 function urlDirname(url: string | URL) {
   return dirname(fileURLToPath(url));

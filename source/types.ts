@@ -41,9 +41,9 @@ export type DeepPartial<T> = T extends object
   ? { [P in keyof T]?: DeepPartial<T[P]> }
   : T;
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// biome-ignore lint/suspicious/noExplicitAny: necessary for compatibility
 export type AsyncReturnType<T extends (...args: any) => Promise<any>> =
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // biome-ignore lint/suspicious/noExplicitAny: necessary for compatibility
   T extends (...args: any) => Promise<infer R> ? R : any;
 
 /**
@@ -90,15 +90,15 @@ export type Mutable<T> = {
 };
 
 /**
-* Flattens and simplifies a type, making it easier to read in editor tooltips.
-*
-* Useful for displaying the "final" shape of a complex type after intersections,
-* mapped types, or conditional types have been applied.
-*
-* @example
-*   type Foo = { a: string } & { b: number };
-*   type PrettyFoo = Prettify<Foo>; // { a: string; b: number }
-*/
+ * Flattens and simplifies a type, making it easier to read in editor tooltips.
+ *
+ * Useful for displaying the "final" shape of a complex type after intersections,
+ * mapped types, or conditional types have been applied.
+ *
+ * @example
+ *   type Foo = { a: string } & { b: number };
+ *   type PrettyFoo = Prettify<Foo>; // { a: string; b: number }
+ */
 export type Prettify<T> = {
   [K in keyof T]: T[K];
 } & {};

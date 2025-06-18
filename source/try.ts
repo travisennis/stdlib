@@ -73,7 +73,7 @@ export class Success<T> extends Try<T> {
     return Option.some(this.value);
   }
 
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: third-party controlled
   toJSON(): { type: "Try.success"; value: T } {
     return { type: "Try.success", value: this.value };
   }
@@ -128,7 +128,7 @@ export class Failure<T> extends Try<T> {
     return Option.none();
   }
 
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: third-party controlled
   toJSON(): { type: "Try.failure"; value: Error } {
     return { type: "Try.failure", value: this.error };
   }

@@ -8,8 +8,10 @@ export function memoize<T extends (...args: any[]) => any>(fn: T): T {
     const key = JSON.stringify(args);
 
     if (cache.has(key)) {
-      // biome-ignore lint/style/noNonNullAssertion: <explanation>
-      return cache.get(key)!;
+      const result = cache.get(key);
+      if (result) {
+        return result;
+      }
     }
 
     const result = fn(...args);

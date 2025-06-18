@@ -53,7 +53,7 @@ export class Ok<T, E> extends Result<T, E> {
     return Option.some(this.value);
   }
 
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: third-party controlled
   toJSON(): { type: "Ok"; value: T } {
     return { type: "Ok", value: this.value };
   }
@@ -97,7 +97,7 @@ export class Err<T, E> extends Result<T, E> {
     return Option.none();
   }
 
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: third-party controlled
   toJSON(): { type: "Err"; value: E } {
     return { type: "Err", value: this.error };
   }

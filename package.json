@@ -82,14 +82,14 @@
     "prepare": "npm run compile",
     "test": "node --test test/**/*.test.ts",
     "pretest": "npm run compile",
-    "format": "biome format --write",
+    "format": "biome check --formatter-enabled=true --linter-enabled=false --write ./source && biome format --write",
     "dev": "node ./source/index.ts",
     "oxlint": "npx oxlint@latest --ignore-path .gitignore --deny correctness --deny suspicous --deny pedantic --deny style --node-plugin",
     "knip": "npx knip",
     "check": "npx npm-check-updates  --interactive --format group"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.0.0",
     "@types/node": "^24.0.3",
     "typescript": "^5.8.3"
   },

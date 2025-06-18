@@ -82,7 +82,7 @@ export class Some<T> extends Option<T> {
     return Either.right(this.value);
   }
 
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: third-party controlled
   toJSON(): { type: "Some"; value: T } {
     return { type: "Some", value: this.value };
   }
@@ -142,7 +142,7 @@ export class None<T> extends Option<T> {
     return Either.left(left);
   }
 
-  // biome-ignore lint/style/useNamingConvention: <explanation>
+  // biome-ignore lint/style/useNamingConvention: third-party controlled
   toJSON(): { type: "None"; value?: T } {
     return { type: "None" };
   }
